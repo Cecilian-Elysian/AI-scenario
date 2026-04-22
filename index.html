@@ -6,29 +6,39 @@
   <title>AI Adventure</title>
   <style>
     :root {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f5f5f5;
-      --bg-tertiary: #e8e8e8;
+      --bg-primary: #fafafa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f0f0f0;
       --text-primary: #1a1a1a;
-      --text-secondary: #666666;
-      --border-color: #d0d0d0;
-      --accent-color: #4a90d9;
-      --user-msg-bg: #e3f2fd;
-      --ai-msg-bg: #f5f5f5;
-      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+      --text-secondary: #8a8a8a;
+      --border-color: #e5e5e5;
+      --accent-color: #3b82f6;
+      --accent-hover: #2563eb;
+      --user-msg-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --ai-msg-bg: #ffffff;
+      --ai-msg-border: #e5e5e5;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
     }
 
     [data-theme="dark"] {
-      --bg-primary: #1a1a1a;
-      --bg-secondary: #252525;
-      --bg-tertiary: #333333;
-      --text-primary: #e8e8e8;
-      --text-secondary: #999999;
-      --border-color: #404040;
-      --accent-color: #6ba3e0;
-      --user-msg-bg: #1e3a5f;
-      --ai-msg-bg: #2a2a2a;
-      --shadow: 0 2px 8px rgba(0,0,0,0.3);
+      --bg-primary: #0f0f0f;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #252525;
+      --text-primary: #f5f5f5;
+      --text-secondary: #666666;
+      --border-color: #2a2a2a;
+      --accent-color: #60a5fa;
+      --accent-hover: #3b82f6;
+      --ai-msg-bg: #1a1a1a;
+      --ai-msg-border: #2a2a2a;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
     }
 
     * {
@@ -38,53 +48,58 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       height: 100vh;
       display: flex;
       flex-direction: column;
       transition: background 0.3s, color 0.3s;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
+      padding: 16px 24px;
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border-color);
       flex-shrink: 0;
     }
 
     header h1 {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
     }
 
     .theme-toggle {
       display: flex;
-      gap: 4px;
+      gap: 2px;
       background: var(--bg-tertiary);
-      padding: 4px;
+      padding: 3px;
       border-radius: 8px;
     }
 
     .theme-btn {
-      padding: 6px 12px;
+      padding: 6px 14px;
       border: none;
       background: transparent;
       color: var(--text-secondary);
       cursor: pointer;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 500;
       transition: all 0.2s;
     }
 
     .theme-btn.active {
-      background: var(--bg-primary);
+      background: var(--bg-secondary);
       color: var(--text-primary);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-sm);
     }
 
     main {
@@ -94,7 +109,7 @@
     }
 
     aside {
-      width: 280px;
+      width: 300px;
       background: var(--bg-secondary);
       border-right: 1px solid var(--border-color);
       display: flex;
@@ -104,69 +119,107 @@
     }
 
     .aside-section {
-      padding: 16px;
+      padding: 20px;
       border-bottom: 1px solid var(--border-color);
     }
 
-    .aside-section h3 {
-      font-size: 12px;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
+    .aside-section:last-child {
+      border-bottom: none;
     }
 
-    .aside-section textarea {
+    .aside-section h3 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .aside-section textarea,
+    .aside-section input {
       width: 100%;
-      min-height: 120px;
-      padding: 10px;
+      padding: 10px 12px;
       border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       background: var(--bg-primary);
       color: var(--text-primary);
       font-size: 13px;
-      resize: vertical;
       font-family: inherit;
+      transition: all 0.2s;
     }
 
-    .aside-section textarea:focus {
+    .aside-section textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .aside-section textarea:focus,
+    .aside-section input:focus {
       outline: none;
       border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    .preset-list, .story-list {
+    .aside-section input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .scroll-area::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 2px;
+    }
+
+    .preset-list,
+    .story-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 150px;
-      overflow-y: auto;
+      padding-bottom: 20px;
     }
 
-    .preset-item, .story-item {
+    .preset-item,
+    .story-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
+      padding: 10px 12px;
       background: var(--bg-primary);
       border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .preset-item:hover, .story-item:hover {
+    .preset-item:hover,
+    .story-item:hover {
       border-color: var(--accent-color);
+      background: var(--bg-secondary);
     }
 
-    .preset-item span, .story-item span {
+    .preset-item span,
+    .story-item span {
       flex: 1;
       font-size: 13px;
+      color: var(--text-primary);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .preset-item button, .story-item button {
+    .preset-item button,
+    .story-item button {
       padding: 4px 8px;
       border: none;
       background: var(--bg-tertiary);
@@ -174,9 +227,18 @@
       cursor: pointer;
       border-radius: 4px;
       font-size: 11px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.2s;
     }
 
-    .preset-item button:hover, .story-item button:hover {
+    .preset-item:hover button,
+    .story-item:hover button {
+      opacity: 1;
+    }
+
+    .preset-item button:hover,
+    .story-item button:hover {
       background: var(--accent-color);
       color: white;
     }
@@ -184,18 +246,19 @@
     .btn-row {
       display: flex;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .btn {
       flex: 1;
-      padding: 8px;
+      padding: 9px 12px;
       border: 1px solid var(--border-color);
-      background: var(--bg-primary);
+      background: var(--bg-secondary);
       color: var(--text-primary);
       cursor: pointer;
-      border-radius: 6px;
-      font-size: 13px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
       transition: all 0.2s;
     }
 
@@ -211,7 +274,7 @@
     }
 
     .btn.primary:hover {
-      opacity: 0.9;
+      background: var(--accent-hover);
     }
 
     .chat-area {
@@ -219,71 +282,101 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      background: var(--bg-primary);
     }
 
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
+    }
+
+    .messages::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .messages::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
     }
 
     .message {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      line-height: 1.5;
+      max-width: 75%;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
       font-size: 14px;
+      line-height: 1.7;
+      box-shadow: var(--shadow-sm);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .message.user {
       align-self: flex-end;
       background: var(--user-msg-bg);
+      color: white;
       border-bottom-right-radius: 4px;
     }
 
     .message.ai {
       align-self: flex-start;
       background: var(--ai-msg-bg);
+      border: 1px solid var(--ai-msg-border);
       border-bottom-left-radius: 4px;
     }
 
     .message .sender {
       font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .message.user .sender {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .message.ai .sender {
       color: var(--text-secondary);
-      margin-bottom: 4px;
     }
 
     .typing-indicator {
       display: flex;
-      gap: 4px;
-      padding: 12px 16px;
+      gap: 5px;
+      padding: 14px 18px;
       background: var(--ai-msg-bg);
-      border-radius: 12px;
+      border: 1px solid var(--ai-msg-border);
+      border-radius: var(--radius-md);
       align-self: flex-start;
       border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow-sm);
     }
 
     .typing-indicator span {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background: var(--text-secondary);
       border-radius: 50%;
       animation: typing 1.4s infinite;
     }
 
-    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
 
     @keyframes typing {
       0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-4px); opacity: 1; }
+      30% { transform: translateY(-5px); opacity: 1; }
     }
 
     .input-area {
-      padding: 16px 20px;
+      padding: 16px 24px;
       background: var(--bg-secondary);
       border-top: 1px solid var(--border-color);
       display: flex;
@@ -293,21 +386,28 @@
 
     .input-area textarea {
       flex: 1;
-      min-height: 44px;
-      max-height: 150px;
+      min-height: 48px;
+      max-height: 120px;
       padding: 12px 16px;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       background: var(--bg-primary);
       color: var(--text-primary);
       font-size: 14px;
-      resize: none;
       font-family: inherit;
+      resize: none;
+      transition: all 0.2s;
+      line-height: 1.5;
     }
 
     .input-area textarea:focus {
       outline: none;
       border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .input-area textarea::placeholder {
+      color: var(--text-secondary);
     }
 
     .input-area button {
@@ -316,47 +416,55 @@
       background: var(--accent-color);
       color: white;
       cursor: pointer;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       font-size: 14px;
-      transition: opacity 0.2s;
+      font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
     }
 
     .input-area button:hover {
-      opacity: 0.9;
+      background: var(--accent-hover);
+      box-shadow: var(--shadow-md);
     }
 
     .input-area button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     .status-bar {
-      padding: 8px 20px;
+      padding: 10px 24px;
       background: var(--bg-tertiary);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-secondary);
       display: flex;
       justify-content: space-between;
+      font-weight: 500;
     }
 
     .api-key-section {
-      padding: 16px;
+      padding: 20px;
       border-bottom: 1px solid var(--border-color);
     }
 
     .api-key-section input {
       width: 100%;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       background: var(--bg-primary);
       color: var(--text-primary);
       font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s;
     }
 
     .api-key-section input:focus {
       outline: none;
       border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .empty-state {
@@ -370,9 +478,17 @@
       padding: 40px;
     }
 
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
+      opacity: 0.4;
+    }
+
     .empty-state p {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       font-size: 14px;
+      color: var(--text-secondary);
     }
   </style>
 </head>
@@ -420,6 +536,9 @@
     <div class="chat-area">
       <div class="messages" id="messages">
         <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
           <p>输入 System Prompt 后开始你的冒险</p>
           <button class="btn primary" id="startAdventure">开始冒险</button>
         </div>
@@ -739,7 +858,7 @@
     userInput.addEventListener('input', () => {
       updateSendButton();
       userInput.style.height = 'auto';
-      userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
+      userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
     });
 
     userInput.addEventListener('keydown', (e) => {
