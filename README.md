@@ -26,5 +26,18 @@ Visit: https://cecilian-elysian.github.io/AI-scenario/
 2. Set the System Prompt (scene/character setting)
 3. Start typing your actions and the AI will generate the story
 
+## Features
+| Feature | Description |
+|---------|-------------|
+| Theme Toggle | Light / Dark / System |
+| Streaming | Real-time AI response with typewriter effect |
+| Presets | Save and load System Prompt presets |
+| Story History | Manage multiple stories |
+| Search | Search stories by name or content |
+| Branch | Create story branches from any point |
+| Rename | Rename stories |
+| Export | Export stories to text files |
+| Batch Operations | Multi-select and batch delete |
+
 ## Version
-- v0.0.1 (2026-04-22)
+- v0.0.3 (2026-04-22)

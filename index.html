@@ -17,6 +17,7 @@
       --user-msg-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       --ai-msg-bg: #ffffff;
       --ai-msg-border: #e5e5e5;
+      --danger-color: #ef4444;
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
       --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
@@ -36,6 +37,7 @@
       --accent-hover: #3b82f6;
       --ai-msg-bg: #1a1a1a;
       --ai-msg-border: #2a2a2a;
+      --danger-color: #f87171;
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
       --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
@@ -73,7 +75,42 @@
       font-size: 16px;
       font-weight: 600;
       letter-spacing: -0.3px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
       color: var(--text-primary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .header-btn.danger:hover {
+      border-color: var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    .header-btn.active {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
     }
 
     .theme-toggle {
@@ -109,7 +146,7 @@
     }
 
     aside {
-      width: 300px;
+      width: 320px;
       background: var(--bg-secondary);
       border-right: 1px solid var(--border-color);
       display: flex;
@@ -119,7 +156,7 @@
     }
 
     .aside-section {
-      padding: 20px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border-color);
     }
 
@@ -133,7 +170,7 @@
       text-transform: uppercase;
       letter-spacing: 0.8px;
       color: var(--text-secondary);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .aside-section textarea,
@@ -150,7 +187,7 @@
     }
 
     .aside-section textarea {
-      min-height: 100px;
+      min-height: 80px;
       resize: vertical;
       line-height: 1.6;
     }
@@ -162,7 +199,21 @@
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    .aside-section input::placeholder {
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      padding-left: 36px;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
       color: var(--text-secondary);
     }
 
@@ -181,45 +232,75 @@
       border-radius: 2px;
     }
 
-    .preset-list,
     .story-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      padding-bottom: 20px;
+      padding-bottom: 16px;
     }
 
-    .preset-item,
     .story-item {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 12px;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px;
       background: var(--bg-primary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all 0.2s;
+      position: relative;
     }
 
-    .preset-item:hover,
     .story-item:hover {
       border-color: var(--accent-color);
-      background: var(--bg-secondary);
     }
 
-    .preset-item span,
-    .story-item span {
+    .story-item.active {
+      border-color: var(--accent-color);
+      background: var(--bg-tertiary);
+    }
+
+    .story-item-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-item-title {
       flex: 1;
       font-size: 13px;
+      font-weight: 500;
       color: var(--text-primary);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .preset-item button,
-    .story-item button {
+    .story-item-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .story-item-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 12px;
+    }
+
+    .story-item-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .story-item:hover .story-item-actions {
+      opacity: 1;
+    }
+
+    .story-item-actions button {
       padding: 4px 8px;
       border: none;
       background: var(--bg-tertiary);
@@ -228,19 +309,16 @@
       border-radius: 4px;
       font-size: 11px;
       font-weight: 500;
-      opacity: 0;
       transition: all 0.2s;
     }
 
-    .preset-item:hover button,
-    .story-item:hover button {
-      opacity: 1;
-    }
-
-    .preset-item button:hover,
-    .story-item button:hover {
+    .story-item-actions button:hover {
       background: var(--accent-color);
       color: white;
+    }
+
+    .story-item-actions button.danger:hover {
+      background: var(--danger-color);
     }
 
     .btn-row {
@@ -277,6 +355,16 @@
       background: var(--accent-hover);
     }
 
+    .btn.danger {
+      border-color: var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    .btn.danger:hover {
+      background: var(--danger-color);
+      color: white;
+    }
+
     .chat-area {
       flex: 1;
       display: flex;
@@ -311,6 +399,7 @@
       line-height: 1.7;
       box-shadow: var(--shadow-sm);
       animation: fadeIn 0.3s ease;
+      position: relative;
     }
 
     @keyframes fadeIn {
@@ -345,6 +434,49 @@
 
     .message.ai .sender {
       color: var(--text-secondary);
+    }
+
+    .message .timestamp {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 10px;
+      opacity: 0.5;
+      color: var(--text-secondary);
+    }
+
+    .message.user .timestamp {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .message-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .message:hover .message-actions {
+      opacity: 1;
+    }
+
+    .message-actions button {
+      padding: 4px 8px;
+      border: none;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 10px;
+      transition: all 0.2s;
+    }
+
+    .message-actions button:hover {
+      background: var(--accent-color);
+      color: white;
     }
 
     .typing-indicator {
@@ -445,7 +577,7 @@
     }
 
     .api-key-section {
-      padding: 20px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border-color);
     }
 
@@ -490,11 +622,134 @@
       font-size: 14px;
       color: var(--text-secondary);
     }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .modal-content {
+      margin-bottom: 20px;
+    }
+
+    .modal-content p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .modal-content .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+
+    .modal-content .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .modal-content .detail-label {
+      color: var(--text-secondary);
+    }
+
+    .modal-content .detail-value {
+      font-weight: 500;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .modal input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+
+    .modal input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .batch-bar {
+      padding: 12px 20px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .batch-bar.active {
+      display: flex;
+    }
+
+    .batch-bar span {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .batch-bar .btn {
+      padding: 6px 12px;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>AI Adventure</h1>
+    <div class="header-actions">
+      <button class="header-btn" id="selectAllStories">全选</button>
+      <button class="header-btn danger" id="deleteSelected" style="display:none">删除选中</button>
+      <button class="header-btn" id="exportAll" style="display:none">导出全部</button>
+    </div>
     <div class="theme-toggle">
       <button class="theme-btn" data-theme="light">浅色</button>
       <button class="theme-btn" data-theme="dark">深色</button>
@@ -515,17 +770,32 @@
       </div>
 
       <div class="aside-section">
+        <h3>搜索</h3>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input type="text" id="storySearch" placeholder="搜索故事...">
+        </div>
+      </div>
+
+      <div class="aside-section">
         <h3>预设</h3>
-        <div class="preset-list" id="presetList"></div>
+        <div class="scroll-area" id="presetScroll">
+          <div class="story-list" id="presetList"></div>
+        </div>
         <div class="btn-row">
           <button class="btn" id="savePreset">保存当前</button>
           <button class="btn" id="loadPreset">加载</button>
         </div>
       </div>
 
-      <div class="aside-section">
+      <div class="aside-section" style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
         <h3>故事历史</h3>
-        <div class="story-list" id="storyList"></div>
+        <div class="scroll-area" id="storyScroll" style="flex:1; overflow-y:auto;">
+          <div class="story-list" id="storyList"></div>
+        </div>
         <div class="btn-row">
           <button class="btn primary" id="newStory">新建故事</button>
           <button class="btn" id="loadStory">加载</button>
@@ -534,6 +804,12 @@
     </aside>
 
     <div class="chat-area">
+      <div class="batch-bar" id="batchBar">
+        <span id="selectedCount">已选择 0 项</span>
+        <button class="btn" id="cancelSelect">取消</button>
+        <button class="btn danger" id="confirmDelete">删除</button>
+      </div>
+
       <div class="messages" id="messages">
         <div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -554,6 +830,17 @@
     </div>
   </main>
 
+  <div class="modal-overlay" id="storyModal">
+    <div class="modal">
+      <h3 id="modalTitle">故事详情</h3>
+      <div class="modal-content" id="modalContent"></div>
+      <div class="modal-actions">
+        <button class="btn" id="modalCancel">取消</button>
+        <button class="btn primary" id="modalConfirm">确定</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_URL = 'http://localhost:3000/v1/text/chatcompletion_v2';
 
@@ -565,6 +852,9 @@
     let conversationHistory = [];
     let totalTokens = 0;
     let isStreaming = false;
+    let selectedStories = new Set();
+    let isSelectMode = false;
+    let searchQuery = '';
 
     const apiKeyInput = document.getElementById('apiKey');
     const systemPromptInput = document.getElementById('systemPrompt');
@@ -575,6 +865,9 @@
     const storyList = document.getElementById('storyList');
     const tokenCount = document.getElementById('tokenCount');
     const connectionStatus = document.getElementById('connectionStatus');
+    const storySearch = document.getElementById('storySearch');
+    const batchBar = document.getElementById('batchBar');
+    const selectedCount = document.getElementById('selectedCount');
 
     function applyTheme(theme) {
       if (theme === 'system') {
@@ -604,24 +897,13 @@
       sendBtn.disabled = !apiKey || !userInput.value.trim() || isStreaming;
     }
 
-    function renderPresets() {
-      presetList.innerHTML = presets.map((p, i) => `
-        <div class="preset-item" data-index="${i}">
-          <span>${escapeHtml(p.name)}</span>
-          <button data-action="load" data-index="${i}">加载</button>
-          <button data-action="delete" data-index="${i}">删</button>
-        </div>
-      `).join('');
-    }
-
-    function renderStories() {
-      storyList.innerHTML = stories.map((s, i) => `
-        <div class="story-item" data-index="${i}">
-          <span>${escapeHtml(s.name)}</span>
-          <button data-action="load" data-index="${i}">加载</button>
-          <button data-action="delete" data-index="${i}">删</button>
-        </div>
-      `).join('');
+    function formatDate(timestamp) {
+      const d = new Date(timestamp);
+      const month = d.getMonth() + 1;
+      const day = d.getDate();
+      const hour = d.getHours().toString().padStart(2, '0');
+      const min = d.getMinutes().toString().padStart(2, '0');
+      return `${month}/${day} ${hour}:${min}`;
     }
 
     function escapeHtml(text) {
@@ -630,11 +912,65 @@
       return div.innerHTML;
     }
 
+    function getFilteredStories() {
+      if (!searchQuery) return stories;
+      const q = searchQuery.toLowerCase();
+      return stories.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.systemPrompt.toLowerCase().includes(q)
+      );
+    }
+
+    function renderPresets() {
+      presetList.innerHTML = presets.map((p, i) => `
+        <div class="story-item" data-index="${i}">
+          <div class="story-item-header">
+            <span class="story-item-title">${escapeHtml(p.name)}</span>
+          </div>
+          <div class="story-item-actions">
+            <button data-action="load" data-index="${i}">加载</button>
+            <button data-action="delete" data-index="${i}">删</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStories() {
+      const filtered = getFilteredStories();
+      storyList.innerHTML = filtered.map((s, i) => {
+        const realIndex = stories.indexOf(s);
+        const isSelected = selectedStories.has(s.id);
+        return `
+        <div class="story-item ${isSelected ? 'selected' : ''} ${s.id === currentStoryId ? 'active' : ''}" data-id="${s.id}" data-index="${realIndex}">
+          <div class="story-item-header">
+            ${isSelectMode ? `<input type="checkbox" ${isSelected ? 'checked' : ''} data-id="${s.id}">` : ''}
+            <span class="story-item-title">${escapeHtml(s.name)}</span>
+          </div>
+          <div class="story-item-meta">
+            <span>${s.messages?.length || 0} 条消息</span>
+            <span>${formatDate(s.updatedAt || s.createdAt)}</span>
+          </div>
+          <div class="story-item-actions">
+            <button data-action="load" data-index="${realIndex}">加载</button>
+            <button data-action="branch" data-index="${realIndex}">分支</button>
+            <button data-action="rename" data-index="${realIndex}">重命名</button>
+            <button data-action="export" data-index="${realIndex}">导出</button>
+            <button data-action="delete" data-index="${realIndex}">删</button>
+          </div>
+        </div>
+      `}).join('');
+    }
+
     function addMessage(role, content) {
       if (role === 'system') return;
       const msg = document.createElement('div');
       msg.className = `message ${role === 'user' ? 'user' : 'ai'}`;
-      msg.innerHTML = `<div class="sender">${role === 'user' ? '你' : 'AI'}</div><div class="content"></div>`;
+      const time = new Date().toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+      msg.innerHTML = `
+        <div class="sender">${role === 'user' ? '你' : 'AI'}</div>
+        <div class="content"></div>
+        ${isSelectMode ? '' : `<span class="timestamp">${time}</span>`}
+      `;
       msg.querySelector('.content').textContent = content;
       messagesContainer.appendChild(msg);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -794,6 +1130,27 @@
       updateSendButton();
     }
 
+    function createBranch(index) {
+      const story = stories[index];
+      if (!story) return;
+
+      const id = Date.now().toString();
+      const name = `${story.name} (分支)`;
+      stories.unshift({
+        id,
+        name,
+        systemPrompt: story.systemPrompt,
+        messages: [...story.messages],
+        tokens: story.tokens || 0,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        branchFrom: story.id
+      });
+      localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
+      renderStories();
+      loadStory(index);
+    }
+
     function loadStory(index) {
       const story = stories[index];
       if (!story) return;
@@ -809,6 +1166,7 @@
         addMessage(msg.role === 'assistant' ? 'ai' : 'user', msg.content);
       });
       updateSendButton();
+      renderStories();
     }
 
     function deleteStory(index) {
@@ -816,10 +1174,161 @@
       if (story && story.id === currentStoryId) {
         currentStoryId = null;
         conversationHistory = [];
+        messagesContainer.innerHTML = '';
       }
       stories.splice(index, 1);
       localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
       renderStories();
+    }
+
+    function renameStory(index) {
+      const story = stories[index];
+      if (!story) return;
+
+      document.getElementById('modalTitle').textContent = '重命名故事';
+      document.getElementById('modalContent').innerHTML = `<input type="text" id="newStoryName" value="${escapeHtml(story.name)}">`;
+      document.getElementById('modalConfirm').onclick = () => {
+        const newName = document.getElementById('newStoryName').value.trim();
+        if (newName) {
+          story.name = newName;
+          story.updatedAt = Date.now();
+          localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
+          renderStories();
+        }
+        closeModal();
+      };
+      openModal();
+    }
+
+    function exportStory(index) {
+      const story = stories[index];
+      if (!story) return;
+
+      let text = `# ${story.name}\n\n`;
+      text += `## System Prompt\n${story.systemPrompt}\n\n`;
+      text += `## 对话记录\n\n`;
+      story.messages.forEach((msg, i) => {
+        const role = msg.role === 'user' ? '你' : 'AI';
+        text += `**${role}**: ${msg.content}\n\n`;
+      });
+      text += `---\nToken: ${story.tokens || 0}\n创建时间: ${new Date(story.createdAt).toLocaleString('zh-CN')}`;
+
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${story.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_')}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function showStoryDetails(index) {
+      const story = stories[index];
+      if (!story) return;
+
+      document.getElementById('modalTitle').textContent = '故事详情';
+      document.getElementById('modalContent').innerHTML = `
+        <p><strong>${escapeHtml(story.name)}</strong></p>
+        <div class="detail-row">
+          <span class="detail-label">消息数</span>
+          <span class="detail-value">${story.messages?.length || 0}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Token 消耗</span>
+          <span class="detail-value">${story.tokens || 0}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">创建时间</span>
+          <span class="detail-value">${new Date(story.createdAt).toLocaleString('zh-CN')}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">更新时间</span>
+          <span class="detail-value">${new Date(story.updatedAt).toLocaleString('zh-CN')}</span>
+        </div>
+        ${story.branchFrom ? `<div class="detail-row"><span class="detail-label">分支自</span><span class="detail-value">${stories.find(s=>s.id===story.branchFrom)?.name || '已删除'}</span></div>` : ''}
+      `;
+      document.getElementById('modalConfirm').style.display = 'none';
+      openModal();
+    }
+
+    function openModal() {
+      document.getElementById('storyModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('storyModal').classList.remove('active');
+      document.getElementById('modalConfirm').style.display = '';
+    }
+
+    function toggleSelectMode() {
+      isSelectMode = !isSelectMode;
+      selectedStories.clear();
+      updateBatchBar();
+      renderStories();
+    }
+
+    function updateBatchBar() {
+      const hasSelection = selectedStories.size > 0;
+      document.getElementById('selectAllStories').textContent = isSelectMode ? '取消' : '全选';
+      document.getElementById('deleteSelected').style.display = isSelectMode && hasSelection ? '' : 'none';
+      document.getElementById('exportAll').style.display = isSelectMode && stories.length > 0 ? '' : 'none';
+      batchBar.classList.toggle('active', isSelectMode);
+      selectedCount.textContent = `已选择 ${selectedStories.size} 项`;
+    }
+
+    function selectAllStories() {
+      if (isSelectMode) {
+        if (selectedStories.size === getFilteredStories().length) {
+          selectedStories.clear();
+        } else {
+          getFilteredStories().forEach(s => selectedStories.add(s.id));
+        }
+      } else {
+        toggleSelectMode();
+      }
+      updateBatchBar();
+      renderStories();
+    }
+
+    function deleteSelectedStories() {
+      if (selectedStories.size === 0) return;
+      const toDelete = stories.filter(s => selectedStories.has(s.id));
+      if (confirm(`确定删除选中的 ${toDelete.length} 个故事？`)) {
+        toDelete.forEach(s => {
+          if (s.id === currentStoryId) {
+            currentStoryId = null;
+            conversationHistory = [];
+            messagesContainer.innerHTML = '';
+          }
+        });
+        stories = stories.filter(s => !selectedStories.has(s.id));
+        localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
+        selectedStories.clear();
+        toggleSelectMode();
+        renderStories();
+      }
+    }
+
+    function exportAllStories() {
+      let text = `# AI Adventure 导出\n导出时间: ${new Date().toLocaleString('zh-CN')}\n\n---\n\n`;
+      getFilteredStories().forEach((story, i) => {
+        text += `## ${i + 1}. ${story.name}\n`;
+        text += `创建时间: ${new Date(story.createdAt).toLocaleString('zh-CN')}\n`;
+        text += `消息数: ${story.messages?.length || 0}\n\n`;
+        story.messages?.forEach(msg => {
+          const role = msg.role === 'user' ? '你' : 'AI';
+          text += `**${role}**: ${msg.content}\n\n`;
+        });
+        text += `---\n\n`;
+      });
+
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ai_adventure_export_${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     function savePreset() {
@@ -885,6 +1394,17 @@
       }
     });
 
+    document.getElementById('selectAllStories').addEventListener('click', selectAllStories);
+    document.getElementById('deleteSelected').addEventListener('click', deleteSelectedStories);
+    document.getElementById('exportAll').addEventListener('click', exportAllStories);
+    document.getElementById('cancelSelect').addEventListener('click', () => toggleSelectMode());
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+
+    storySearch.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderStories();
+    });
+
     presetList.addEventListener('click', (e) => {
       const action = e.target.dataset.action;
       const index = parseInt(e.target.dataset.index);
@@ -893,10 +1413,36 @@
     });
 
     storyList.addEventListener('click', (e) => {
+      if (isSelectMode) {
+        const checkbox = e.target.closest('input[type="checkbox"]');
+        if (checkbox) {
+          const id = checkbox.dataset.id;
+          if (selectedStories.has(id)) {
+            selectedStories.delete(id);
+          } else {
+            selectedStories.add(id);
+          }
+          updateBatchBar();
+          renderStories();
+          return;
+        }
+      }
+
       const action = e.target.dataset.action;
       const index = parseInt(e.target.dataset.index);
       if (action === 'load') loadStory(index);
       if (action === 'delete') deleteStory(index);
+      if (action === 'rename') renameStory(index);
+      if (action === 'export') exportStory(index);
+      if (action === 'branch') createBranch(index);
+    });
+
+    storyList.addEventListener('dblclick', (e) => {
+      const item = e.target.closest('.story-item');
+      if (item && !isSelectMode) {
+        const index = parseInt(item.dataset.index);
+        showStoryDetails(index);
+      }
     });
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
