@@ -3,15 +3,22 @@
 ## 简介
 一个 AI 驱动的互动文字冒险游戏，你可以输入任何行动，AI 会实时生成故事情节。
 
-## 安装
+## 本地运行（推荐）
 
-### 方式一：VS Code Live Server（推荐）
-1. 安装 [VS Code](https://code.visualstudio.com/)
-2. 安装 **Live Server** 扩展
-3. 用 VS Code 打开项目文件夹
-4. 右键 `index.html` → **"Open with Live Server"**
+### 1. 启动 CORS 代理
+打开 PowerShell，运行：
+```powershell
+npx local-cors-proxy --port 3000 --proxyUrl https://api.minimaxi.com
+```
 
-### 方式二：GitHub Pages 访问
+### 2. 打开 index.html
+直接双击 `index.html` 用浏览器打开即可。
+
+### 提示
+- 代理窗口不要关闭
+- 如果端口被占用，修改 `start.bat` 中的端口号（需同步修改 index.html 中的 `localhost:3000`）
+
+## 在线访问
 访问：https://cecilian-elysian.github.io/AI-scenario/
 
 ## 使用

@@ -3,15 +3,22 @@
 ## Description
 An interactive AI-driven text adventure game where you can input any action and the AI generates the story in real-time.
 
-## Installation
+## Local Run (Recommended)
 
-### Option 1: VS Code Live Server (Recommended)
-1. Install [VS Code](https://code.visualstudio.com/)
-2. Install the **Live Server** extension
-3. Open the project folder in VS Code
-4. Right-click `index.html` → **"Open with Live Server"**
+### 1. Start CORS Proxy
+Open PowerShell and run:
+```powershell
+npx local-cors-proxy --port 3000 --proxyUrl https://api.minimaxi.com
+```
 
-### Option 2: GitHub Pages
+### 2. Open index.html
+Double-click `index.html` to open in browser.
+
+### Note
+- Keep the proxy window open
+- If port 3000 is in use, change the port in `start.bat` and update `localhost:3000` in index.html
+
+## Online Access
 Visit: https://cecilian-elysian.github.io/AI-scenario/
 
 ## Usage
