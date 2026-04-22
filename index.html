@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Adventure</title>
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --bg-tertiary: #e8e8e8;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border-color: #d0d0d0;
+      --accent-color: #4a90d9;
+      --user-msg-bg: #e3f2fd;
+      --ai-msg-bg: #f5f5f5;
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #252525;
+      --bg-tertiary: #333333;
+      --text-primary: #e8e8e8;
+      --text-secondary: #999999;
+      --border-color: #404040;
+      --accent-color: #6ba3e0;
+      --user-msg-bg: #1e3a5f;
+      --ai-msg-bg: #2a2a2a;
+      --shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .theme-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-tertiary);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .theme-btn {
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .theme-btn.active {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      box-shadow: var(--shadow);
+    }
+
+    main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    aside {
+      width: 280px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .aside-section {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .aside-section h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .aside-section textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .aside-section textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .preset-list, .story-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .preset-item, .story-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-item:hover, .story-item:hover {
+      border-color: var(--accent-color);
+    }
+
+    .preset-item span, .story-item span {
+      flex: 1;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .preset-item button, .story-item button {
+      padding: 4px 8px;
+      border: none;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .preset-item button:hover, .story-item button:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .btn.primary {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+    }
+
+    .btn.primary:hover {
+      opacity: 0.9;
+    }
+
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--user-msg-bg);
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.ai {
+      align-self: flex-start;
+      background: var(--ai-msg-bg);
+      border-bottom-left-radius: 4px;
+    }
+
+    .message .sender {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--ai-msg-bg);
+      border-radius: 12px;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      background: var(--text-secondary);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    .input-area {
+      padding: 16px 20px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .input-area textarea {
+      flex: 1;
+      min-height: 44px;
+      max-height: 150px;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 14px;
+      resize: none;
+      font-family: inherit;
+    }
+
+    .input-area textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .input-area button {
+      padding: 12px 24px;
+      border: none;
+      background: var(--accent-color);
+      color: white;
+      cursor: pointer;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    .input-area button:hover {
+      opacity: 0.9;
+    }
+
+    .input-area button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-bar {
+      padding: 8px 20px;
+      background: var(--bg-tertiary);
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .api-key-section {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .api-key-section input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .api-key-section input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 40px;
+    }
+
+    .empty-state p {
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI Adventure</h1>
+    <div class="theme-toggle">
+      <button class="theme-btn" data-theme="light">浅色</button>
+      <button class="theme-btn" data-theme="dark">深色</button>
+      <button class="theme-btn active" data-theme="system">跟随系统</button>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <div class="api-key-section">
+        <h3>API Key</h3>
+        <input type="password" id="apiKey" placeholder="输入 MiniMax API Key">
+      </div>
+
+      <div class="aside-section">
+        <h3>System Prompt</h3>
+        <textarea id="systemPrompt" placeholder="设置场景/角色设定..."></textarea>
+      </div>
+
+      <div class="aside-section">
+        <h3>预设</h3>
+        <div class="preset-list" id="presetList"></div>
+        <div class="btn-row">
+          <button class="btn" id="savePreset">保存当前</button>
+          <button class="btn" id="loadPreset">加载</button>
+        </div>
+      </div>
+
+      <div class="aside-section">
+        <h3>故事历史</h3>
+        <div class="story-list" id="storyList"></div>
+        <div class="btn-row">
+          <button class="btn primary" id="newStory">新建故事</button>
+          <button class="btn" id="loadStory">加载</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="chat-area">
+      <div class="messages" id="messages">
+        <div class="empty-state">
+          <p>输入 System Prompt 后开始你的冒险</p>
+          <button class="btn primary" id="startAdventure">开始冒险</button>
+        </div>
+      </div>
+      <div class="input-area">
+        <textarea id="userInput" placeholder="输入你的行动..." rows="1"></textarea>
+        <button id="sendBtn" disabled>发送</button>
+      </div>
+      <div class="status-bar">
+        <span id="tokenCount">Token: 0</span>
+        <span id="connectionStatus"></span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = 'https://api.minimaxi.com/v1/text/chatcompletion_v2';
+
+    let apiKey = localStorage.getItem('ai_adventure_api_key') || '';
+    let currentTheme = localStorage.getItem('ai_adventure_theme') || 'system';
+    let presets = JSON.parse(localStorage.getItem('ai_adventure_presets') || '[]');
+    let stories = JSON.parse(localStorage.getItem('ai_adventure_stories') || '[]');
+    let currentStoryId = null;
+    let conversationHistory = [];
+    let totalTokens = 0;
+    let isStreaming = false;
+
+    const apiKeyInput = document.getElementById('apiKey');
+    const systemPromptInput = document.getElementById('systemPrompt');
+    const messagesContainer = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const presetList = document.getElementById('presetList');
+    const storyList = document.getElementById('storyList');
+    const tokenCount = document.getElementById('tokenCount');
+    const connectionStatus = document.getElementById('connectionStatus');
+
+    function applyTheme(theme) {
+      if (theme === 'system') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+      });
+    }
+
+    function saveApiKey() {
+      apiKey = apiKeyInput.value.trim();
+      localStorage.setItem('ai_adventure_api_key', apiKey);
+      updateSendButton();
+    }
+
+    function saveTheme(theme) {
+      currentTheme = theme;
+      localStorage.setItem('ai_adventure_theme', theme);
+      applyTheme(theme);
+    }
+
+    function updateSendButton() {
+      sendBtn.disabled = !apiKey || !userInput.value.trim() || isStreaming;
+    }
+
+    function renderPresets() {
+      presetList.innerHTML = presets.map((p, i) => `
+        <div class="preset-item" data-index="${i}">
+          <span>${escapeHtml(p.name)}</span>
+          <button data-action="load" data-index="${i}">加载</button>
+          <button data-action="delete" data-index="${i}">删</button>
+        </div>
+      `).join('');
+    }
+
+    function renderStories() {
+      storyList.innerHTML = stories.map((s, i) => `
+        <div class="story-item" data-index="${i}">
+          <span>${escapeHtml(s.name)}</span>
+          <button data-action="load" data-index="${i}">加载</button>
+          <button data-action="delete" data-index="${i}">删</button>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function addMessage(role, content) {
+      if (role === 'system') return;
+      const msg = document.createElement('div');
+      msg.className = `message ${role === 'user' ? 'user' : 'ai'}`;
+      msg.innerHTML = `<div class="sender">${role === 'user' ? '你' : 'AI'}</div><div class="content"></div>`;
+      msg.querySelector('.content').textContent = content;
+      messagesContainer.appendChild(msg);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return msg;
+    }
+
+    function addTypingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.className = 'typing-indicator';
+      indicator.innerHTML = '<span></span><span></span><span></span>';
+      indicator.id = 'typingIndicator';
+      messagesContainer.appendChild(indicator);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return indicator;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      if (indicator) indicator.remove();
+    }
+
+    async function streamAIResponse(messages) {
+      isStreaming = true;
+      updateSendButton();
+      addTypingIndicator();
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'M2-her',
+            stream: true,
+            messages: messages,
+            max_completion_tokens: 2048
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let aiMessage = null;
+        let contentDiv = null;
+        let fullContent = '';
+
+        connectionStatus.textContent = '已连接';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+
+              try {
+                const parsed = JSON.parse(data);
+                const delta = parsed.choices?.[0]?.delta?.content || '';
+                if (delta) {
+                  if (!aiMessage) {
+                    removeTypingIndicator();
+                    aiMessage = addMessage('assistant', '');
+                    contentDiv = aiMessage.querySelector('.content');
+                  }
+                  fullContent += delta;
+                  contentDiv.textContent = fullContent;
+                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                if (parsed.usage?.total_tokens) {
+                  totalTokens = parsed.usage.total_tokens;
+                  tokenCount.textContent = `Token: ${totalTokens}`;
+                }
+              } catch (e) {}
+            }
+          }
+        }
+
+        if (aiMessage) {
+          conversationHistory.push({ role: 'assistant', content: fullContent });
+        }
+
+      } catch (error) {
+        removeTypingIndicator();
+        connectionStatus.textContent = `错误: ${error.message}`;
+        addMessage('ai', `错误: ${error.message}`);
+      } finally {
+        isStreaming = false;
+        updateSendButton();
+        saveCurrentStory();
+      }
+    }
+
+    async function sendMessage() {
+      const content = userInput.value.trim();
+      if (!content || !apiKey || isStreaming) return;
+
+      addMessage('user', content);
+      conversationHistory.push({ role: 'user', content });
+      userInput.value = '';
+      updateSendButton();
+
+      const messages = [
+        { role: 'system', content: systemPromptInput.value || '你是一个讲故事的人，根据用户的行动生成有趣的故事情节。' }
+      ].concat(conversationHistory);
+
+      await streamAIResponse(messages);
+    }
+
+    function saveCurrentStory() {
+      if (!currentStoryId || conversationHistory.length === 0) return;
+
+      const story = stories.find(s => s.id === currentStoryId);
+      if (story) {
+        story.messages = conversationHistory;
+        story.tokens = totalTokens;
+        story.updatedAt = Date.now();
+        localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
+        renderStories();
+      }
+    }
+
+    function createNewStory() {
+      if (!systemPromptInput.value.trim()) {
+        alert('请先输入 System Prompt');
+        return;
+      }
+
+      const id = Date.now().toString();
+      const name = `故事 ${new Date().toLocaleString('zh-CN')}`;
+      stories.unshift({
+        id,
+        name,
+        systemPrompt: systemPromptInput.value,
+        messages: [],
+        tokens: 0,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      });
+      currentStoryId = id;
+      conversationHistory = [];
+      totalTokens = 0;
+      localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
+      renderStories();
+      messagesContainer.innerHTML = '';
+      tokenCount.textContent = 'Token: 0';
+      updateSendButton();
+    }
+
+    function loadStory(index) {
+      const story = stories[index];
+      if (!story) return;
+
+      currentStoryId = story.id;
+      systemPromptInput.value = story.systemPrompt;
+      conversationHistory = [...story.messages];
+      totalTokens = story.tokens || 0;
+      tokenCount.textContent = `Token: ${totalTokens}`;
+
+      messagesContainer.innerHTML = '';
+      conversationHistory.forEach(msg => {
+        addMessage(msg.role === 'assistant' ? 'ai' : 'user', msg.content);
+      });
+      updateSendButton();
+    }
+
+    function deleteStory(index) {
+      const story = stories[index];
+      if (story && story.id === currentStoryId) {
+        currentStoryId = null;
+        conversationHistory = [];
+      }
+      stories.splice(index, 1);
+      localStorage.setItem('ai_adventure_stories', JSON.stringify(stories));
+      renderStories();
+    }
+
+    function savePreset() {
+      const name = prompt('输入预设名称:');
+      if (!name || !systemPromptInput.value.trim()) return;
+
+      presets.push({
+        name,
+        systemPrompt: systemPromptInput.value
+      });
+      localStorage.setItem('ai_adventure_presets', JSON.stringify(presets));
+      renderPresets();
+    }
+
+    function loadPreset(index) {
+      const preset = presets[index];
+      if (preset) {
+        systemPromptInput.value = preset.systemPrompt;
+      }
+    }
+
+    function deletePreset(index) {
+      presets.splice(index, 1);
+      localStorage.setItem('ai_adventure_presets', JSON.stringify(presets));
+      renderPresets();
+    }
+
+    apiKeyInput.value = apiKey;
+    apiKeyInput.addEventListener('change', saveApiKey);
+    apiKeyInput.addEventListener('blur', saveApiKey);
+
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => saveTheme(btn.dataset.theme));
+    });
+
+    userInput.addEventListener('input', () => {
+      updateSendButton();
+      userInput.style.height = 'auto';
+      userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
+    });
+
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+    document.getElementById('newStory').addEventListener('click', createNewStory);
+    document.getElementById('savePreset').addEventListener('click', savePreset);
+    document.getElementById('loadPreset').addEventListener('click', () => {
+      const btns = document.querySelectorAll('#presetList [data-action="load"]');
+      if (btns.length > 0) {
+        const index = parseInt(btns[0].dataset.index);
+        loadPreset(index);
+      }
+    });
+
+    document.getElementById('startAdventure').addEventListener('click', () => {
+      if (systemPromptInput.value.trim()) {
+        createNewStory();
+      }
+    });
+
+    presetList.addEventListener('click', (e) => {
+      const action = e.target.dataset.action;
+      const index = parseInt(e.target.dataset.index);
+      if (action === 'load') loadPreset(index);
+      if (action === 'delete') deletePreset(index);
+    });
+
+    storyList.addEventListener('click', (e) => {
+      const action = e.target.dataset.action;
+      const index = parseInt(e.target.dataset.index);
+      if (action === 'load') loadStory(index);
+      if (action === 'delete') deleteStory(index);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (currentTheme === 'system') applyTheme('system');
+    });
+
+    applyTheme(currentTheme);
+    renderPresets();
+    renderStories();
+    updateSendButton();
+  </script>
+</body>
+</html>
