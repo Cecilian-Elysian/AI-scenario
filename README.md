@@ -22,22 +22,30 @@ Double-click `index.html` to open in browser.
 Visit: https://cecilian-elysian.github.io/AI-scenario/
 
 ## Usage
-1. Enter your MiniMax API Key
-2. Set the System Prompt (scene/character setting)
-3. Start typing your actions and the AI will generate the story
+
+1. Enter your MiniMax API Key in the settings panel
+2. Set the System Prompt (scene/character setting) or load a preset
+3. Create a new story and start typing your actions
+4. The AI will generate the story in real-time with streaming responses
 
 ## Features
+
 | Feature | Description |
 |---------|-------------|
-| Theme Toggle | Light / Dark / System |
-| Streaming | Real-time AI response with typewriter effect |
-| Presets | Save and load System Prompt presets |
-| Story History | Manage multiple stories |
-| Search | Search stories by name or content |
-| Branch | Create story branches from any point |
-| Rename | Rename stories |
-| Export | Export stories to text files |
-| Batch Operations | Multi-select and batch delete |
+| 🌙 Theme Toggle | Light / Dark / System theme support |
+| ⌨️ Streaming | Real-time AI response with typewriter effect |
+| 💾 Presets | Save and load System Prompt presets |
+| 📚 Story History | Manage multiple stories with full CRUD |
+| 🔍 Search | Search stories by name or content |
+| 🌿 Branch | Create story branches from any point |
+| ✏️ Rename | Rename stories easily |
+| 📤 Export | Export stories to text files |
+| 🗑️ Batch Operations | Multi-select and batch delete |
 
 ## Version
-- v0.0.3 (2026-04-22)
+
+- **v0.0.3** (2026-04-22)
+
+## License
+
+MIT
